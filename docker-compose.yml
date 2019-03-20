@@ -4,7 +4,8 @@ services:
         image: "influxdb"
         ports:
          - "8086:8086"
-         volumes: /var/lib/influxdb:/var/lib/influxdb
+        volumes:
+         - "/var/lib/influxdb:/var/lib/influxdb"
     grafana:
         depends_on:
          - "influxdb"
@@ -13,3 +14,5 @@ services:
          - GF_INSTALL_PLUGINS=grafana-clock-panel,jdbranham-diagram-panel,grafana-piechart-panel,snuids-radar-panel,snuids-trafficlights-panel,btplc-trend-box-panel,grafana-worldmap-panel
         ports:
          - "3000:3000"
+        volumes:
+         - "/var/lib/grafana:/var/lib/grafana"
