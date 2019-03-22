@@ -47,10 +47,12 @@ namespace DataCollector
 
             List<InfluxDatapoint<InfluxValueField>> list = new List<InfluxDatapoint<InfluxValueField>>();
             foreach (JToken c in o.Children()) {
-                int visits = c.First.SelectToken("nb_visits").Value<int>();
-                int actions = c.First.SelectToken("nb_actions").Value<int>();
-                int users = c.First.SelectToken("nb_users").Value<int>();
-                list.Add(SmartAlarm_Overview.CreateInfluxDatapoint(MeasurementName, DateTime.Parse(c.Path).ToUniversalTime(), visits, actions, users));
+                if (c.First.Count() > 0) {
+                    int visits = c.First.SelectToken("nb_visits").Value<int>();
+                    int actions = c.First.SelectToken("nb_actions").Value<int>();
+                    int users = c.First.SelectToken("nb_users").Value<int>();
+                    list.Add(SmartAlarm_Overview.CreateInfluxDatapoint(MeasurementName, DateTime.Parse(c.Path).ToUniversalTime(), visits, actions, users));
+                }
             }
 
             return list;
