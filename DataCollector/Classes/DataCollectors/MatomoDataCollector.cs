@@ -24,7 +24,7 @@ namespace DataCollector
                     matomoURL,
                     "VisitsSummary.get",
                     "4",
-                    DateTime.Now.AddDays(-14).ToString("yyyy-MM-dd") + ",today",
+                    DateTime.Now.AddDays(-49).ToString("yyyy-MM-dd") + ",today",
                     "day",
                     "json",
                     Token
