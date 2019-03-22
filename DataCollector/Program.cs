@@ -15,6 +15,7 @@ namespace DataCollector
             GoogleRealtimeDataCollector<mySMS_Realtime> coll2 = new GoogleRealtimeDataCollector<mySMS_Realtime>(config["DatabaseEndpoint"], config["DatabaseName"], "mySMS_Realtime", config["GoogleAuthenticationJSONPath"], config["GoogleAuthenticationUserName"]);
             MailChimpDataCollector coll3 = new MailChimpDataCollector(config["DatabaseEndpoint"], config["DatabaseName"], "MailChimp", config["MailChimpAPIKey"], config["MailChimpCampaignID"]);
             SmartAlarmDataCollector coll4 = new SmartAlarmDataCollector(config["DatabaseEndpoint"], config["DatabaseName"], "SmartAlarm_ConnectorStatus", config["SmartAlarmConnectorStatusUserName"], config["SmartAlarmConnectorStatusPassword"]);
+            MatomoDataCollector coll5 = new MatomoDataCollector(config["DatabaseEndpoint"], config["DatabaseName"], "SmartAlarm_Overview", config["MatomoToken"]);
 
             try
             {
@@ -39,6 +40,9 @@ namespace DataCollector
 
                 coll4.Interval = 900 * 1000;
                 coll4.Start();
+
+                coll5.Interval = 3600 * 1000;
+                coll5.Start();
 
                 Console.ReadKey(true);
             }

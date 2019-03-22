@@ -32,6 +32,8 @@ namespace DataCollector
 
                 HttpWebResponse httpResp = (HttpWebResponse)httpReq.GetResponse();
                 string json = new StreamReader(httpResp.GetResponseStream()).ReadToEnd();
+                httpResp.Close();
+                await WriteToDatabase(ParseJSON(json));
             }
             catch (WebException ex)
             {
@@ -40,6 +42,7 @@ namespace DataCollector
                     if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.InternalServerError)
                     {
                         string json = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()).ReadToEnd();
+                        ex.Response.Close();
                         if (json != "")
                         {
                             await WriteToDatabase(ParseJSON(json));
