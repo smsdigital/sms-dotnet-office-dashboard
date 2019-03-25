@@ -9,17 +9,38 @@ using System.Threading.Tasks;
 
 namespace DataCollector
 {
+    /// <summary>
+    /// A collector for data about SMS digital's SmartAlarm connectors.
+    /// /// </summary>
     class SmartAlarmDataCollector : DataCollector
     {
+        /// <summary>
+        /// The user name to authenticate against the API.
+        /// </summary>
         public string UserName { get; set; }
+        /// <summary>
+        /// The password to authenticate against the API.
+        /// </summary>
         public string Password { get; set; }
 
+        /// <summary>
+        /// Creates a new SmartAlarmDataCollector object using the Influx Database with the given name at the given endpoint to store the data using the given measurement name. It authenticates using the given username and password.
+        /// </summary>
+        /// <param name="databaseEndpoint">The address of an Influx Database endpoint. Usually defaults to http://localhost:8086.</param>
+        /// <param name="databaseName">The name of the database the collector will save the data in.</param>
+        /// <param name="measurementName">The measurement name that will be used when saving data in the database.</param>
+        /// <param name="userName">The user name to authenticate against the API.</param>
+        /// <param name="password">The password to authenticate against the API.</param>
+        /// <returns></returns>
         public SmartAlarmDataCollector(string databaseEndpoint, string databaseName, string measurementName, string userName, string password) : base(databaseEndpoint, databaseName, measurementName)
         {
             UserName = userName;
             Password = password;
         }
 
+        /// <summary>
+        /// Requests data each time the period specified by Interval has elapsed.
+        /// </summary>
         public async override Task RequestData()
         {
             try
@@ -39,6 +60,7 @@ namespace DataCollector
             {
                 try
                 {
+                    // The response may be 500 if one of the connectors is not working properly. This is intended behavior, so even in this case data has to be proceeded.
                     if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.InternalServerError)
                     {
                         string json = new StreamReader(((HttpWebResponse)ex.Response).GetResponseStream()).ReadToEnd();
@@ -56,6 +78,11 @@ namespace DataCollector
             }
         }
 
+        /// <summary>
+        /// Parses the given JSON string in order to extract the connector name and its heartbeat and event data.
+        /// </summary>
+        /// <param name="json">The JSON string to be parsed.</param>
+        /// <returns>A list containing the data for each SmartAlarm connector.</returns>
         private List<InfluxDatapoint<InfluxValueField>> ParseJSON(string json)
         {
             JObject o = JObject.Parse(json);

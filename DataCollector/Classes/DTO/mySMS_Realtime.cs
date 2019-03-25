@@ -6,6 +6,12 @@ namespace DataCollector
 {
     class mySMS_Realtime
     {
+        /// <summary>
+        /// Creates a DTO that contains Google Realtime data to be stored in the database.
+        /// </summary>
+        /// <param name="measurementName">The name of the measurement that the data is stored in.</param>
+        /// <param name="fields">A dictionary containing the requested Google Realtime data.</param>
+        /// <returns>An InfluxDatapoint object containing the Google Realtime data.</returns>
         public static InfluxDatapoint<InfluxValueField> CreateInfluxDatapoint(string measurementName, Dictionary<string, string> fields)
         {
             InfluxDatapoint<InfluxValueField> dp = new InfluxDatapoint<InfluxValueField>();

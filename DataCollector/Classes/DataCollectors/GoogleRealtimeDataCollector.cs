@@ -13,6 +13,14 @@ namespace DataCollector
         public AnalyticsService AnalyticsService { get; set; }
         public DataResource.RealtimeResource.GetRequest GetRequest { get; set; }
 
+        /// <summary>
+        /// Creates a new GoogleRealtimeDataCollector object using the Influx Database with the given name at the given endpoint to store the data using the given measurement name.
+        /// </summary>
+        /// <param name="databaseEndpoint">The address of an Influx Database endpoint. Usually defaults to http://localhost:8086.</param>
+        /// <param name="databaseName">The name of the database the collector will save the data in.</param>
+        /// <param name="measurementName">The measurement name that will be used when saving data in the database.</param>
+        /// <param name="oAuthJSONPath">The location of the JSON file obtained from the Google Developer Console. It contains the data in order to authenticate against the Google OAuth 2.0 API.</param>
+        /// <param name="userName">The user name of the Google account that is supposed to run the app.</param>
         public GoogleRealtimeDataCollector(string databaseEndpoint, string databaseName, string measurementName, string oAuthJSONPath, string userName) : base(databaseEndpoint, databaseName, measurementName, oAuthJSONPath, userName)
         {
             Scopes.Add("https://www.googleapis.com/auth/analytics.readonly");
@@ -21,14 +29,17 @@ namespace DataCollector
             GetRequest.Dimensions = "rt:minutesAgo";
         }
 
+        /// <summary>
+        /// Requests data each time the period specified by Interval has elapsed.
+        /// </summary>
         public async override Task RequestData()
         {
             try {
                 Google.Apis.Analytics.v3.Data.RealtimeData rt = GetRequest.Execute();
                 List<Dictionary<string, string>> data = RealtimeData.GetData(rt);
 
+                // Gets the date of the latest dataset in order to only add newer data.
                 List<IInfluxSeries> last = await InfluxClient.QueryMultiSeriesAsync(DatabaseName, "SELECT last(*) FROM " + MeasurementName);
-
                 DateTime now = DateTime.UtcNow;
                 DateTime New = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
                 DateTime? latest = last.FirstOrDefault()?.Entries[0].Time;
