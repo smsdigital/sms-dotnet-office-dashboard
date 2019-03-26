@@ -74,7 +74,7 @@ namespace DataCollector
                     int actions = c.First.SelectToken("nb_actions").Value<int>();
                     int users = c.First.SelectToken("nb_users").Value<int>();
                     list.Add(SmartAlarm_Overview.CreateInfluxDatapoint(MeasurementName, 
-                    DateTime.Parse(c.Path).ToUniversalTime(), visits, actions, users));
+                    DateTime.Parse(c.Path).AddMinutes(TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).TotalMinutes).ToUniversalTime(), visits, actions, users));
                 }
             }
 
