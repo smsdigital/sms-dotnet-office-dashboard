@@ -1,0 +1,21 @@
+version: '3'
+services:
+    influxdb:
+        image: "influxdb"
+        restart: always
+        ports:
+         - "8086:8086"
+        volumes:
+         - "../influxdb:/var/lib/influxdb"
+    grafana:
+        depends_on:
+         - "influxdb"
+        restart: always
+        image: "grafana/grafana"
+        environment:
+         - GF_INSTALL_PLUGINS=grafana-clock-panel,jdbranham-diagram-panel,grafana-piechart-panel,snuids-radar-panel,snuids-trafficlights-panel,btplc-trend-box-panel,grafana-worldmap-panel
+        ports:
+         - "3000:3000"
+        user: "1000"
+        volumes:
+         - "../grafana:/var/lib/grafana"

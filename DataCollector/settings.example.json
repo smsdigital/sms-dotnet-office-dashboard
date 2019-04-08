@@ -1,0 +1,17 @@
+{
+    // The endpoint that is used to query the Influx database. Defaults to http://localhost:8086
+    "DatabaseEndpoint": "http://localhost:8086",
+    "DatabaseName": "Database",
+
+    // The authentication settings for the OAuth 2.0 API in order to authorize the app.
+    "GoogleAuthenticationJSONPath": "path/to/authentication.json",
+    "GoogleAuthenticationUserName": "example@example.com",
+
+    // MailChimp Data allowing to access report data.
+    "MailChimpAPIKey": "jdfal818ß94nfbka87eß014u4rnhd034-usXX",
+    "MailChimpCampaignID": "hs0o21174ns",
+    
+    // The credentials used to authenticate against the SmartAlarm Connector API
+    "SmartAlarmConnectorStatusUserName": "example",
+    "SmartAlarmConnectorStatusPassword": "supersecureandverylongpasswordthatwillneverbeguessed" 
+}
